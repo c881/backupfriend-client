@@ -1,21 +1,22 @@
-import wx.adv
-import wx
-from wx import MenuBar, Panel, WindowList
-import sys
-from wx import xrc
-import yaml
+import local
 import os
-import schedule
-from dataclasses import dataclass
-import subprocess
-import time
-from backupfriend.common import get_data_path, ensure_dir, resource_path
-from collections.abc import Iterable
-import wx.lib.inspection
-import shutil
 import shlex
-from pubsub import pub
+import shutil
+import subprocess
+import sys
+import time
+from collections.abc import Iterable
+from dataclasses import dataclass
 
+import schedule
+import wx
+import wx.adv
+import wx.lib.inspection
+import yaml
+from pubsub import pub
+from wx import MenuBar, Panel, WindowList, xrc
+
+from backupfriend.common import get_data_path, ensure_dir, resource_path
 
 TRAY_ICON = os.path.join(os.path.dirname(__file__), "images", 'icon.png')
 TRAY_TOOLTIP = 'BackupFriend'
@@ -695,6 +696,9 @@ class MainInvisibleWindow(wx.Frame):
 class App(wx.App):
 
     def OnInit(self):
+        if sys.platform.startswith('win') and sys.version_info > (3,8):
+            import locale
+            locale.setlocale(locale.LC_ALL, "C")
         wx.Log.SetActiveTarget(wx.LogStderr())
 
         if debug:
